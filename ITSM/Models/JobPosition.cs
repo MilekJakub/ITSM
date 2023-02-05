@@ -6,5 +6,6 @@ namespace ITSM.Models
     {
         public int Id { get; set; }
         public string Position { get; set; }
+        public IEnumerable<User> Users { get; set; }
     }
 }

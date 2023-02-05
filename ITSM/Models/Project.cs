@@ -2,11 +2,11 @@
 
 namespace ITSM.Models
 {
-    public class Tag
+    public class Project
     {
         public int Id { get; set; }
-        public string Value { get; set; }
-
+        public string Name { get; set; }
+        public string Description { get; set; }
         public IEnumerable<WorkItem> WorkItems { get; set; }
     }
 }
