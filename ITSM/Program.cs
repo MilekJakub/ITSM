@@ -1,5 +1,6 @@
 using ITSM.Data;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Identity;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -8,6 +9,18 @@ builder.Services.AddControllersWithViews();
 builder.Services.AddSwaggerGen();
 
 builder.Services.AddDbContext<BoardsContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("Main")));
+
+builder.Services.AddIdentity<IdentityUser, IdentityRole>()
+    .AddDefaultTokenProviders()
+    .AddDefaultUI()
+    .AddEntityFrameworkStores<BoardsContext>();
+
+builder.Services.ConfigureApplicationCookie(options =>
+{
+    options.LoginPath = $"/Identity/Account/Login";
+    options.LogoutPath = $"/Identity/Account/Logout";
+    options.AccessDeniedPath = $"/Identity/Account/AccessDenied";
+});
 
 var app = builder.Build();
 
@@ -23,12 +36,15 @@ app.UseHttpsRedirection();
 app.UseStaticFiles();
 
 app.UseRouting();
+app.UseAuthentication();;
 
 app.UseAuthorization();
 
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
+
+app.MapRazorPages();
 
 app.UseSwagger();
 app.UseSwaggerUI(options =>
@@ -38,24 +54,3 @@ app.UseSwaggerUI(options =>
 });
 
 app.Run();
-
-#region Comments
-
-//options =>
-//{
-//    options.SwaggerDoc("1.0.0", new OpenApiInfo
-//    {
-//        Version = "1.0.0",
-//        Title = "ITSM",
-//        Description = "IT Service Managment tool for reporting bugs",
-//        Contact = new OpenApiContact()
-//        {
-//            Name = "Swagger Codegen Contributors",
-//            Url = new Uri("https://github.com/swagger-api/swagger-codegen"),
-//            Email = "apiteam@swagger.io"
-//        },
-//        TermsOfService = new Uri("http://swagger.io/terms/")
-//    });
-//}
-
-#endregion

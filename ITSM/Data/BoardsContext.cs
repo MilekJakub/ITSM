@@ -1,12 +1,15 @@
 ﻿#pragma warning disable CS8618
 
 using ITSM.Models;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
 namespace ITSM.Data
 {
-    public class BoardsContext : DbContext
+    public class BoardsContext : IdentityDbContext<IdentityUser>
     {
+        public DbSet<User> Users { get; set; }
         public DbSet<WorkItem> WorkItems { get; set; }
         public DbSet<Epic> Epics { get; set; }
         public DbSet<Issue> Issues { get; set; }
@@ -15,11 +18,13 @@ namespace ITSM.Data
         public DbSet<Tag> Tags { get; set; }
         public DbSet<JobPosition> JobPositions { get; set; }
         public DbSet<Project> Projects { get; set; }
-
+            
         public BoardsContext(DbContextOptions<BoardsContext> options) : base(options) { }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            base.OnModelCreating(modelBuilder);
+
             modelBuilder.Entity<User>(builder =>
             {
                 builder
@@ -47,15 +52,6 @@ namespace ITSM.Data
 
                 builder
                     .Property(x => x.Description)
-                    .IsRequired();
-
-                builder
-                    .Property(x => x.State)
-                    .HasMaxLength(50)
-                    .IsRequired();
-
-                builder
-                    .Property(x => x.Project)
                     .IsRequired();
 
                 builder

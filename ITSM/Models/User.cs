@@ -1,8 +1,12 @@
 ﻿#pragma warning disable CS8618
 
+
+
+using Microsoft.AspNetCore.Identity;
+
 namespace ITSM.Models
 {
-    public class User
+    public class User : IdentityUser
     {
         public string Forename { get; set; }
 
