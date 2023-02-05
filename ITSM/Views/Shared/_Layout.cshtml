@@ -1,0 +1,23 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"]</title>
+    <partial name="_ScriptsPartial" />
+</head>
+<body>
+    <div class="container-fluid">
+        <partial name="_NavbarPartial" />
+    
+        <main role="main">
+            @RenderBody()
+        </main>
+
+        <partial name="_FooterPartial" />
+    </div>
+    
+    <partial name="_ScriptsPartial" />
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>
