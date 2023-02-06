@@ -42,7 +42,7 @@ namespace ITSM.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Name = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
                     Description = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
@@ -251,13 +251,12 @@ namespace ITSM.Migrations
                         column: x => x.ProjectId,
                         principalTable: "Projects",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_WorkItems_State_StateId",
                         column: x => x.StateId,
                         principalTable: "State",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -285,8 +284,7 @@ namespace ITSM.Migrations
                         name: "FK_Comments_WorkItems_WorkItemId",
                         column: x => x.WorkItemId,
                         principalTable: "WorkItems",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -304,20 +302,18 @@ namespace ITSM.Migrations
                         name: "FK_WorkItemTags_Tags_TagId",
                         column: x => x.TagId,
                         principalTable: "Tags",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "Id");
                     table.ForeignKey(
                         name: "FK_WorkItemTags_WorkItems_WorkItemId",
                         column: x => x.WorkItemId,
                         principalTable: "WorkItems",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "Id");
                     table.ForeignKey(
                         name: "FK_WorkItemTags_WorkItems_WorkItemsId",
                         column: x => x.WorkItemsId,
                         principalTable: "WorkItems",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.NoAction);
                 });
 
             migrationBuilder.CreateIndex(

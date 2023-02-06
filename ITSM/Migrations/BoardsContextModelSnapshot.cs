@@ -91,8 +91,8 @@ namespace ITSM.Migrations
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.HasKey("Id");
 
@@ -479,7 +479,7 @@ namespace ITSM.Migrations
                     b.HasOne("ITSM.Models.WorkItem", "WorkItem")
                         .WithMany("Comments")
                         .HasForeignKey("WorkItemId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.Navigation("User");
@@ -492,13 +492,13 @@ namespace ITSM.Migrations
                     b.HasOne("ITSM.Models.Project", "Project")
                         .WithMany("WorkItems")
                         .HasForeignKey("ProjectId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.HasOne("ITSM.Models.State", "State")
                         .WithMany("WorkItems")
                         .HasForeignKey("StateId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.HasOne("ITSM.Models.User", "User")
@@ -519,13 +519,13 @@ namespace ITSM.Migrations
                     b.HasOne("ITSM.Models.Tag", "Tag")
                         .WithMany()
                         .HasForeignKey("TagId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.HasOne("ITSM.Models.WorkItem", "WorkItem")
                         .WithMany()
                         .HasForeignKey("WorkItemId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.HasOne("ITSM.Models.WorkItem", null)

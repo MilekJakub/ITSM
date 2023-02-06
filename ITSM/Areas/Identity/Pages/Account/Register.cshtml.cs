@@ -104,6 +104,7 @@ namespace ITSM.Areas.Identity.Pages.Account
         {
             ReturnUrl = returnUrl;
             ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
+            ViewData["action"] = "Register";
         }
 
         public async Task<IActionResult> OnPostAsync(string returnUrl = null)

@@ -6,36 +6,38 @@
 <nav id="sidebarMenu" class="collapse d-lg-block sidebar collapse bg-white">
     <div class="d-flex flex-column flex-shrink-0 position-sticky p-3 text-bg-dark bg-dark sidebar-height">
         <ul class="nav nav-pills flex-column mb-auto">
+            
             <li class="nav-item">
-                <a class="nav-link active" asp-controller="Home" asp-action="Index">
+                <a class="nav-link text-white @(ViewContext.RouteData.Values["Controller"]?.ToString() == "Home" ? "active" : "")" href="/Home">
                     <i class="bi bi-house-fill"></i>
                     Home
                 </a>
             </li>
             <li>
-                <a class="nav-link text-white" asp-controller="WorkItem" asp-action="Index">
+                <a class="nav-link text-white @(ViewContext.RouteData.Values["Controller"]?.ToString() == "WorkItem" ? "active" : "")" asp-controller="WorkItem" asp-action="Index">
                     <i class="bi bi-clipboard2-check-fill"></i>
                     Work Items
                 </a>
             </li>
             <li>
-                <a class="nav-link text-white" asp-controller="Project" asp-action="Index">
+                <a class="nav-link text-white @(ViewContext.RouteData.Values["Controller"]?.ToString() == "Project" ? "active" : "")" asp-controller="Project" asp-action="Index">
                     <i class="bi bi-box-fill"></i>
                     Projects
                 </a>
             </li>
             <li>
-                <a class="nav-link text-white" asp-controller="State" asp-action="Index">
+                <a class="nav-link text-white @(ViewContext.RouteData.Values["Controller"]?.ToString() == "State" ? "active" : "")" asp-controller="State" asp-action="Index">
                     <i class="bi bi-x-diamond-fill"></i>
                     Item States
                 </a>
             </li>
             <li>
-                <a class="nav-link text-white" asp-controller="Tag" asp-action="Index">
+                <a class="nav-link text-white @(ViewContext.RouteData.Values["Controller"]?.ToString() == "Tag" ? "active" : "")" asp-controller="Tag" asp-action="Index">
                     <i class="bi bi-tags"></i>
                     Tags
                 </a>
             </li>
+
         </ul>
         <hr>
 
@@ -55,8 +57,8 @@
         else
         {
             <div class="d-flex mt-auto justify-content-around">
-                <a class="text-white text-center text-decoration-none" id="login" asp-area="Identity" asp-page="/Account/Login">Login</a>
-                <a class="text-white text-center text-decoration-none" id="register" asp-area="Identity" asp-page="/Account/Register">Register</a>
+                <a class="badge rounded-pill text-center text-decoration-none @(ViewData["action"] == "Login" ? "bg-white text-black" : "text-white")" id="login" asp-area="Identity" asp-page="/Account/Login">Login</a>
+                <a class="badge rounded-pill text-center text-decoration-none @(ViewData["action"] == "Register" ? "bg-white text-black" : "text-white")" id="register" asp-area="Identity" asp-page="/Account/Register">Register</a>
             </div>
         }
     </div>

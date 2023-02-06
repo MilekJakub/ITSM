@@ -50,10 +50,6 @@ main {
     }
 }
 
-.sidebar .active {
-    border-radius: 5px;
-}
-
 .sidebar-sticky {
     position: relative;
     top: 0;

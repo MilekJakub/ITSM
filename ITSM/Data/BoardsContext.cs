@@ -62,17 +62,20 @@ namespace ITSM.Data
                 builder
                     .HasOne(x => x.State)
                     .WithMany(y => y.WorkItems)
-                    .HasForeignKey(x => x.StateId);
+                    .HasForeignKey(x => x.StateId)
+                    .OnDelete(DeleteBehavior.NoAction);
 
                 builder
                     .HasOne(x => x.Project)
                     .WithMany(y => y.WorkItems)
-                    .HasForeignKey(x => x.ProjectId);
+                    .HasForeignKey(x => x.ProjectId)
+                    .OnDelete(DeleteBehavior.Restrict);
 
                 builder
                     .HasMany(x => x.Comments)
                     .WithOne(y => y.WorkItem)
-                    .HasForeignKey(y => y.WorkItemId);
+                    .HasForeignKey(y => y.WorkItemId)
+                    .OnDelete(DeleteBehavior.Restrict);
 
                 builder
                     .HasMany(x => x.Tags)
@@ -82,12 +85,14 @@ namespace ITSM.Data
                         builder
                             .HasOne(x => x.WorkItem)
                             .WithMany()
-                            .HasForeignKey(x => x.WorkItemId);
+                            .HasForeignKey(x => x.WorkItemId)
+                            .OnDelete(DeleteBehavior.NoAction);
 
                         builder
                             .HasOne(x => x.Tag)
                             .WithMany()
-                            .HasForeignKey(x => x.TagId);
+                            .HasForeignKey(x => x.TagId)
+                            .OnDelete(DeleteBehavior.NoAction);
 
                         builder
                             .HasKey(x => new { x.WorkItemId, x.TagId });
@@ -127,6 +132,12 @@ namespace ITSM.Data
                 builder
                     .Property(x => x.UpdateDate)
                     .ValueGeneratedOnUpdate();
+
+                builder
+                    .HasOne(x => x.WorkItem)
+                    .WithMany(y => y.Comments)
+                    .HasForeignKey(x => x.WorkItemId)
+                    .OnDelete(DeleteBehavior.NoAction);
             });
 
             modelBuilder.Entity<JobPosition>(builder =>
@@ -140,7 +151,7 @@ namespace ITSM.Data
             {
                 builder
                     .Property(x => x.Name)
-                    .HasMaxLength(100);
+                    .HasMaxLength(50);
             });
 
             modelBuilder.Entity<State>(builder =>
