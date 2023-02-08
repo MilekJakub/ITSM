@@ -12,14 +12,16 @@ namespace ITSM.Models
 
         public int Priority { get; set; }
 
+        public string Discriminator { get; set; }
+
         public int StateId { get; set; }
         public State State { get; set; }
         
-        public int ProjectId { get; set; }
-        public Project Project { get; set; }
+        public int? ProjectId { get; set; }
+        public Project? Project { get; set; }
 
         public string? UserId { get; set; }
-        public User User { get; set; }
+        public User? User { get; set; }
 
         public IEnumerable<Comment> Comments { get; set; }
         public IEnumerable<Tag> Tags { get; set; }

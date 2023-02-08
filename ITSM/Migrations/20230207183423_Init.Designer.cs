@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ITSM.Migrations
 {
     [DbContext(typeof(BoardsContext))]
-    [Migration("20230206172335_Init")]
+    [Migration("20230207183423_Init")]
     partial class Init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -160,7 +160,7 @@ namespace ITSM.Migrations
                     b.Property<byte>("Priority")
                         .HasColumnType("TINYINT");
 
-                    b.Property<int>("ProjectId")
+                    b.Property<int?>("ProjectId")
                         .HasColumnType("int");
 
                     b.Property<int>("StateId")
@@ -172,7 +172,6 @@ namespace ITSM.Migrations
                         .HasColumnType("nvarchar(100)");
 
                     b.Property<string>("UserId")
-                        .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
                     b.HasKey("Id");
@@ -494,8 +493,7 @@ namespace ITSM.Migrations
                     b.HasOne("ITSM.Models.Project", "Project")
                         .WithMany("WorkItems")
                         .HasForeignKey("ProjectId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("ITSM.Models.State", "State")
                         .WithMany("WorkItems")
@@ -505,9 +503,7 @@ namespace ITSM.Migrations
 
                     b.HasOne("ITSM.Models.User", "User")
                         .WithMany("WorkItems")
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("UserId");
 
                     b.Navigation("Project");
 

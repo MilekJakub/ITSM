@@ -158,7 +158,7 @@ namespace ITSM.Migrations
                     b.Property<byte>("Priority")
                         .HasColumnType("TINYINT");
 
-                    b.Property<int>("ProjectId")
+                    b.Property<int?>("ProjectId")
                         .HasColumnType("int");
 
                     b.Property<int>("StateId")
@@ -170,7 +170,6 @@ namespace ITSM.Migrations
                         .HasColumnType("nvarchar(100)");
 
                     b.Property<string>("UserId")
-                        .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
                     b.HasKey("Id");
@@ -492,8 +491,7 @@ namespace ITSM.Migrations
                     b.HasOne("ITSM.Models.Project", "Project")
                         .WithMany("WorkItems")
                         .HasForeignKey("ProjectId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("ITSM.Models.State", "State")
                         .WithMany("WorkItems")
@@ -503,9 +501,7 @@ namespace ITSM.Migrations
 
                     b.HasOne("ITSM.Models.User", "User")
                         .WithMany("WorkItems")
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("UserId");
 
                     b.Navigation("Project");
 

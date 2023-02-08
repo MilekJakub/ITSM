@@ -1,8 +1,9 @@
 ﻿#pragma warning disable CS8618
 
-namespace ITSM.ViewModels
+
+namespace ITSM.ViewModels.ProjectViewModels
 {
-    public class ProjectViewModel
+    public class TruncatedProjectViewModel
     {
         public int Id { get; set; }
         public string Name { get; set; }

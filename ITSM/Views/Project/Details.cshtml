@@ -1,0 +1,99 @@
+﻿@model ProjectDetailsViewModel
+
+<form method="post" asp-action="@(Model.Project.Id == 0 ? "Create" : "Update")">
+    <div class="row">
+        <div class="col-12 col-md-6 px-3">
+            <div class="form-floating mb-3 mx-auto">
+                <input hidden asp-for="Project.Id" />
+                <input asp-for="Project.Name" class="form-control" placeholder="Project name" />
+                <label asp-for="Project.Name">Project name</label>
+                <span asp-validation-for="Project.Name" class="text-danger"></span>
+            </div>
+            <div class="form-floating mb-3">
+                <textarea id="projectDescription" asp-for="Project.Description" class="form-control" placeholder="Project description" style="resize: vertical; min-height: 64px; max-height: 320px;"></textarea>
+                <label asp-for="Project.Description">Project description</label>
+                <span asp-validation-for="Project.Description" class="text-danger"></span>
+            </div>
+            <button type="submit" class="btn btn-outline-primary rounded-0 px-3 float-end">Save changes</button>
+        </div>
+        <div class="col-12 col-md-6 px-3">
+            @if (Model.Project.WorkItems != null && Model.Project.WorkItems.Any())
+            {
+                <h4 class="text-center">Work items in this project.</h4>
+                
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th scope="col">Id</th>
+                            <th scope="col">Name</th>
+                            <th scope="col">Priority</th>
+                            <th scope="col">State</th>
+                            <th scope="col">User</th>
+                            <th scope="col">Type</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model.Project.WorkItems)
+                        {
+                            <tr>
+                                <td>@item.Id</td>
+                                <td>@item.Title</td>
+                                <td>@item.Priority</td>
+                                <td>@item.State.Name</td>
+                                <td>@(item.User == null ? "Unassigned" : $"{item.User.Forename} {item.User.Surname}")</td>
+                                <td>@item.Discriminator</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            }
+            @if (Model.UnassignedWorkItems != null && Model.UnassignedWorkItems.Any())
+            {
+                <h4 class="text-center">Unassigned work items.</h4>
+
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th scope="col">Id</th>
+                            <th scope="col">Name</th>
+                            <th scope="col">Priority</th>
+                            <th scope="col">State</th>
+                            <th scope="col">User</th>
+                            <th scope="col">Type</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model.UnassignedWorkItems)
+                        {
+                            <tr>
+                                <td>@item.Id</td>
+                                <td>@item.Title</td>
+                                <td>@item.Priority</td>
+                                <td>@item.State.Name</td>
+                                <td>@(item.User == null ? "Unassigned" : $"{item.User.Forename} {item.User.Surname}")</td>
+                                <td>@item.Discriminator</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            }
+        </div>
+    </div>
+</form>
+
+@section Scripts {
+
+    <script type="text/javascript">
+        var textarea = document.getElementById("projectDescription");
+        var heightLimit = 320;
+
+        textarea.style.height = "";
+        textarea.style.height = Math.min(textarea.scrollHeight + 2, heightLimit) + "px";
+
+        textarea.oninput = function () {
+            textarea.style.height = "";
+            textarea.style.height = Math.min(textarea.scrollHeight + 2, heightLimit) + "px";
+        };
+    </script>
+
+}
