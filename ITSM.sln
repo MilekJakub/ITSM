@@ -3,7 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.4.33205.214
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ITSM", "ITSM\ITSM.csproj", "{4A83E2F6-EFCD-470C-9320-6BC61C18B504}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ITSM", "ITSM\ITSM.csproj", "{4A83E2F6-EFCD-470C-9320-6BC61C18B504}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ITSM.Tests", "ITSM.Tests\ITSM.Tests.csproj", "{AD9A9D7B-6239-43E8-89DA-01E70052A582}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +17,10 @@ Global
 		{4A83E2F6-EFCD-470C-9320-6BC61C18B504}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4A83E2F6-EFCD-470C-9320-6BC61C18B504}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4A83E2F6-EFCD-470C-9320-6BC61C18B504}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AD9A9D7B-6239-43E8-89DA-01E70052A582}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AD9A9D7B-6239-43E8-89DA-01E70052A582}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AD9A9D7B-6239-43E8-89DA-01E70052A582}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AD9A9D7B-6239-43E8-89DA-01E70052A582}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -39,6 +39,9 @@ namespace ITSM.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int?>("ProjectId")
+                        .HasColumnType("int");
+
                     b.Property<DateTime?>("UpdateDate")
                         .ValueGeneratedOnUpdate()
                         .HasColumnType("datetime2");
@@ -47,16 +50,18 @@ namespace ITSM.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<int>("WorkItemId")
+                    b.Property<int?>("WorkItemId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("ProjectId");
 
                     b.HasIndex("UserId");
 
                     b.HasIndex("WorkItemId");
 
-                    b.ToTable("Comments");
+                    b.ToTable("Comments", (string)null);
                 });
 
             modelBuilder.Entity("ITSM.Models.JobPosition", b =>
@@ -74,7 +79,7 @@ namespace ITSM.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("JobPositions");
+                    b.ToTable("JobPositions", (string)null);
                 });
 
             modelBuilder.Entity("ITSM.Models.Project", b =>
@@ -96,7 +101,7 @@ namespace ITSM.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Projects");
+                    b.ToTable("Projects", (string)null);
                 });
 
             modelBuilder.Entity("ITSM.Models.State", b =>
@@ -118,7 +123,7 @@ namespace ITSM.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("State");
+                    b.ToTable("States", (string)null);
                 });
 
             modelBuilder.Entity("ITSM.Models.Tag", b =>
@@ -136,7 +141,7 @@ namespace ITSM.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Tags");
+                    b.ToTable("Tags", (string)null);
                 });
 
             modelBuilder.Entity("ITSM.Models.WorkItem", b =>
@@ -161,7 +166,7 @@ namespace ITSM.Migrations
                     b.Property<int?>("ProjectId")
                         .HasColumnType("int");
 
-                    b.Property<int>("StateId")
+                    b.Property<int?>("StateId")
                         .HasColumnType("int");
 
                     b.Property<string>("Title")
@@ -180,7 +185,7 @@ namespace ITSM.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("WorkItems");
+                    b.ToTable("WorkItems", (string)null);
 
                     b.HasDiscriminator<string>("Discriminator").HasValue("WorkItem");
                 });
@@ -202,7 +207,7 @@ namespace ITSM.Migrations
 
                     b.HasIndex("WorkItemsId");
 
-                    b.ToTable("WorkItemTags");
+                    b.ToTable("WorkItemTags", (string)null);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -436,13 +441,12 @@ namespace ITSM.Migrations
                 {
                     b.HasBaseType("ITSM.Models.WorkItem");
 
-                    b.Property<string>("Activity")
-                        .IsRequired()
+                    b.Property<int>("Activity")
                         .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
+                        .HasColumnType("int");
 
-                    b.Property<decimal>("RemainingWork")
-                        .HasColumnType("DECIMAL(5,2)");
+                    b.Property<byte>("RemainingWork")
+                        .HasColumnType("TINYINT");
 
                     b.HasDiscriminator().HasValue("Task");
                 });
@@ -469,6 +473,11 @@ namespace ITSM.Migrations
 
             modelBuilder.Entity("ITSM.Models.Comment", b =>
                 {
+                    b.HasOne("ITSM.Models.Project", "Project")
+                        .WithMany("Comments")
+                        .HasForeignKey("ProjectId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
                     b.HasOne("ITSM.Models.User", "User")
                         .WithMany("Comments")
                         .HasForeignKey("UserId")
@@ -478,8 +487,9 @@ namespace ITSM.Migrations
                     b.HasOne("ITSM.Models.WorkItem", "WorkItem")
                         .WithMany("Comments")
                         .HasForeignKey("WorkItemId")
-                        .OnDelete(DeleteBehavior.NoAction)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.NoAction);
+
+                    b.Navigation("Project");
 
                     b.Navigation("User");
 
@@ -491,13 +501,12 @@ namespace ITSM.Migrations
                     b.HasOne("ITSM.Models.Project", "Project")
                         .WithMany("WorkItems")
                         .HasForeignKey("ProjectId")
-                        .OnDelete(DeleteBehavior.Restrict);
+                        .OnDelete(DeleteBehavior.Cascade);
 
                     b.HasOne("ITSM.Models.State", "State")
                         .WithMany("WorkItems")
                         .HasForeignKey("StateId")
-                        .OnDelete(DeleteBehavior.NoAction)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.NoAction);
 
                     b.HasOne("ITSM.Models.User", "User")
                         .WithMany("WorkItems")
@@ -604,6 +613,8 @@ namespace ITSM.Migrations
 
             modelBuilder.Entity("ITSM.Models.Project", b =>
                 {
+                    b.Navigation("Comments");
+
                     b.Navigation("WorkItems");
                 });
 

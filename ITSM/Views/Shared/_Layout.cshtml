@@ -21,7 +21,10 @@
         @*<partial name="_FooterPartial" />*@
     </div>
     
+    <partial name="_AlertsPartial" />
+
     <partial name="_ScriptsPartial" />
+    <partial name="_ValidationScriptsPartial" />
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>

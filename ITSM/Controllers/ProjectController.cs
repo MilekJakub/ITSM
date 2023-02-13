@@ -1,27 +1,27 @@
 ﻿using ITSM.Data;
 using ITSM.Models;
 using ITSM.Services;
-using ITSM.ViewModels.ProjectViewModels;
+using ITSM.ViewModels;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace ITSM.Controllers
 {
+    [Authorize]
     public class ProjectController : Controller
     {
-        private readonly BoardsContext _dbContext;
         private readonly IProjectService _projectService;
 
-        public ProjectController(BoardsContext dbContext, IProjectService projectService)
+        public ProjectController(IProjectService projectService)
         {
-            _dbContext = dbContext;
             _projectService = projectService;
         }
 
         [HttpGet]
         public IActionResult Index()
         {
-            var truncatedProjects = _projectService.GetTruncatedProjects();
+            var truncatedProjects = _projectService.GetAll();
 
             return View(truncatedProjects);
         }
@@ -30,9 +30,12 @@ namespace ITSM.Controllers
         public IActionResult Create(ProjectDetailsViewModel projectDetailsVM)
         {
             if(!ModelState.IsValid)
-                return View(projectDetailsVM);
+                return View(nameof(Details), projectDetailsVM);
 
-            _projectService.Create(projectDetailsVM);
+            var result = _projectService.Create(projectDetailsVM);
+
+            if(result) TempData["success"] = "Project has been created successfully.";
+            else TempData["error"] = "Something went wrong while creating a project.";
 
             return RedirectToAction(nameof(Index));
         }
@@ -49,19 +52,25 @@ namespace ITSM.Controllers
         }
 
         [HttpPost]
-        public IActionResult Update(ProjectDetailsViewModel projectCreateVM, int id)
+        public IActionResult Update(ProjectDetailsViewModel projectDetailsVM, int id)
         {
             if(!ModelState.IsValid)
-                return View(nameof(Details), projectCreateVM);
+                return RedirectToAction(nameof(Details), new { projectDetailsVM.Project.Id });
 
-            _projectService.Update(projectCreateVM);
+            var result = _projectService.Update(projectDetailsVM);
 
-            return RedirectToAction(nameof(Index));
+            if(result) TempData["success"] = "Project has been updated succesfully.";
+            else TempData["error"] = "Something went wrong while updating the project.";
+
+            return RedirectToAction(nameof(Details), new { projectDetailsVM.Project.Id });
         }
 
         public IActionResult Delete(int id)
         {
-            _projectService.Delete(id);
+            var result = _projectService.Delete(id);
+
+            if(result) TempData["success"] = "Project has been deleted succesfully.";
+            else TempData["error"] = "Something went wrong while deleting the project.";
 
             return RedirectToAction(nameof(Index));
         }

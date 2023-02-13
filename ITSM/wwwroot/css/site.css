@@ -59,6 +59,39 @@ main {
     overflow-y: auto; /* Scrollable contents if viewport is shorter than content. */
 }
 
+/* Nested dropdowns */
+
 .nav-item-hover:hover {
     background-color: #EEE;
+}
+
+.dropdown-menu li {
+    position: relative;
+}
+
+.dropdown-menu .dropdown-submenu {
+    display: none;
+    position: absolute;
+    left: 100%;
+    top: -10px;
+}
+
+.dropdown-menu .dropdown-submenu-left {
+    right: 100%;
+    left: auto;
+}
+
+.dropdown-menu > li:hover > .dropdown-submenu {
+    display: block;
+}
+
+/* Quill */
+
+body > #standalone-container {
+    margin: 50px auto;
+}
+
+#editor-container {
+    height: fit-content;
+    min-height: 350px;
 }

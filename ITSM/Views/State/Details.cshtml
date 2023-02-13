@@ -1,0 +1,86 @@
+﻿@model State
+
+<form method="post" asp-action="@(Model.Id == 0 ? "Create" : "Update")">
+    <div class="row d-flex justify-content-center">
+        <div class="col-12 col-md-8 px-3">
+            @if (User.IsInRole("Admin"))
+            {
+                <div class="form-floating mb-3 mx-auto">
+                    <input hidden asp-for="Id" />
+                    <input asp-for="Name" class="form-control" placeholder="State name" />
+                    <label asp-for="Name">State name</label>
+                    <span asp-validation-for="Name" class="text-danger"></span>
+                </div>
+                <div class="form-floating mb-3">
+                    <textarea id="stateDescription" asp-for="Description" class="form-control" placeholder="State description" style="resize: vertical; min-height: 64px; max-height: 320px;"></textarea>
+                    <label asp-for="Description">State description</label>
+                    <span asp-validation-for="Description" class="text-danger"></span>
+                </div>
+
+                <button type="submit" class="btn btn-outline-primary rounded-0 px-3 float-end">Save changes</button>
+            }
+            else
+            {
+                <div class="form-floating mb-3 mx-auto">
+                    <input readonly asp-for="Name" class="form-control" placeholder="State name" />
+                    <label asp-for="Name">State name</label>
+                </div>
+                <div class="form-floating mb-3 mx-auto">
+                    <textarea readonly id="stateDescription" asp-for="Description" class="form-control" placeholder="State description" style="resize: vertical; min-height: 64px; max-height: 320px;"></textarea>
+                    <label asp-for="Description">State description</label>
+                </div>
+            }
+
+
+        </div>
+        <div class="col-12 col-md-8 px-3">
+            @if (Model.WorkItems != null && Model.WorkItems.Any())
+            {
+                <h4 class="text-center">Work items in this state.</h4>
+
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th scope="col">Id</th>
+                            <th scope="col">Name</th>
+                            <th scope="col">Priority</th>
+                            <th scope="col">State</th>
+                            <th scope="col">User</th>
+                            <th scope="col">Type</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model.WorkItems)
+                        {
+                            <tr>
+                                <td>@item.Id</td>
+                                <td>@item.Title</td>
+                                <td>@item.Priority</td>
+                                <td>@Model.Name</td>
+                                <td>@(item.User == null ? "Unassigned" : $"{item.User.Forename} {item.User.Surname}")</td>
+                                <td>@item.Discriminator</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            }
+        </div>
+    </div>
+</form>
+
+@section Scripts {
+
+    <script type="text/javascript">
+        var textarea = document.getElementById("stateDescription");
+        var heightLimit = 320;
+
+        textarea.style.height = "";
+        textarea.style.height = Math.min(textarea.scrollHeight + 2, heightLimit) + "px";
+
+        textarea.oninput = function () {
+            textarea.style.height = "";
+            textarea.style.height = Math.min(textarea.scrollHeight + 2, heightLimit) + "px";
+        };
+    </script>
+
+}

@@ -2,6 +2,7 @@ using ITSM.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity;
 using ITSM.Services;
+using ITSM.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -11,7 +12,7 @@ builder.Services.AddControllersWithViews();
 
 builder.Services.AddDbContext<BoardsContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("Main")));
 
-builder.Services.AddIdentity<IdentityUser, IdentityRole>()
+builder.Services.AddIdentity<IdentityUser, IdentityRole>(options => options.User.RequireUniqueEmail = true)
     .AddDefaultTokenProviders()
     .AddDefaultUI()
     .AddEntityFrameworkStores<BoardsContext>();
@@ -24,6 +25,10 @@ builder.Services.ConfigureApplicationCookie(options =>
 });
 
 builder.Services.AddScoped<IProjectService, ProjectService>();
+builder.Services.AddScoped<IStateService, StateService>();
+builder.Services.AddScoped<IJobPositionService, JobPositionService>();
+builder.Services.AddScoped<ICommenctService, CommentService>();
+builder.Services.AddScoped<IWorkItemService, WorkItemService>();
 
 var app = builder.Build();
 
@@ -48,5 +53,7 @@ app.MapControllerRoute(
     pattern: "{controller=Home}/{action=Index}/{id?}");
 
 app.MapRazorPages();
+
+Seeder.Seed(app);
 
 app.Run();

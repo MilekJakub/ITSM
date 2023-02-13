@@ -1,5 +1,7 @@
 ﻿#pragma warning disable CS8618
 
+using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
+
 namespace ITSM.Models
 {
     public class State
@@ -8,6 +10,7 @@ namespace ITSM.Models
         public string Name { get; set; }
         public string Description { get; set; }
 
-        public IEnumerable<WorkItem>? WorkItems { get; set; }
+        [ValidateNever]
+        public IEnumerable<WorkItem> WorkItems { get; set; }
     }
 }

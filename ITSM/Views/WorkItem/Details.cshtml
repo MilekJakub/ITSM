@@ -1,0 +1,336 @@
+﻿@model WorkItemDetailsViewModel
+
+<form method="post" asp-action="@(Model.Id == 0 ? "Create" : "Update")">
+    <div class="row d-flex justify-content-center">
+        <div class="col-12 col-xl-6 px-3">
+            <div id="standalone-container" class="mb-3">
+                <div id="toolbar-container" class="d-none">
+                    <span class="ql-formats">
+                        <select class="ql-font"></select>
+                        <select class="ql-size"></select>
+                    </span>
+                    <span class="ql-formats">
+                        <button class="ql-bold"></button>
+                        <button class="ql-italic"></button>
+                        <button class="ql-underline"></button>
+                        <button class="ql-strike"></button>
+                    </span>
+                    <span class="ql-formats">
+                        <select class="ql-color"></select>
+                        <select class="ql-background"></select>
+                    </span>
+                    <span class="ql-formats">
+                        <button class="ql-script" value="sub"></button>
+                        <button class="ql-script" value="super"></button>
+                    </span>
+                    <span class="ql-formats">
+                        <button class="ql-header" value="1"></button>
+                        <button class="ql-header" value="2"></button>
+                        <button class="ql-blockquote"></button>
+                        <button class="ql-code-block"></button>
+                    </span>
+                    <span class="ql-formats">
+                        <button class="ql-list" value="ordered"></button>
+                        <button class="ql-list" value="bullet"></button>
+                        <button class="ql-indent" value="-1"></button>
+                        <button class="ql-indent" value="+1"></button>
+                    </span>
+                    <span class="ql-formats">
+                        <button class="ql-direction" value="rtl"></button>
+                        <select class="ql-align"></select>
+                    </span>
+                    <span class="ql-formats">
+                        <button class="ql-link"></button>
+                        <button class="ql-image"></button>
+                        <button class="ql-video"></button>
+                        <button class="ql-formula"></button>
+                    </span>
+                    <span class="ql-formats">
+                        <button class="ql-clean"></button>
+                    </span>
+                </div>
+                <div id="editor-container" class="border shadow"></div>
+            </div>
+            <span asp-validation-for="Description" class="text-danger"></span>
+        </div>
+    </div>
+
+    <div class="row d-flex justify-content-center">
+        <div class="col-12 col-xl-6 px-3">
+            <div class="form-floating mb-3 mx-auto">
+                <input hidden asp-for="Id" />
+                <input hidden asp-for="Discriminator" />
+                <textarea hidden id="description" asp-for="Description"></textarea>
+                <input id="title" asp-for="Title" class="form-control" placeholder="State name" />
+                <label asp-for="Title">Title</label>
+                <span asp-validation-for="Title" class="text-danger"></span>
+            </div>
+
+            <div class="form-floating mb-3 mx-auto">
+                <select id="state" class="form-select mb-3" aria-label="Item state select" asp-for="StateId" asp-items="@Model.ItemStates">
+                    <option value="@null" selected>Not assigned</option>
+                </select>
+                <label asp-for="StateId">State</label>
+            </div>
+            <div class="form-floating mb-3 mx-auto">
+                <select id="project" class="form-select mb-3" aria-label="Project select" asp-for="ProjectId" asp-items="@Model.Projects">
+                    <option value="@null" selected>Not assigned</option>
+                </select>
+                <label asp-for="ProjectId">Project</label>
+            </div>
+            <div class="form-floating mb-3 mx-auto">
+                <select id="user" class="form-select mb-3" aria-label="User select" asp-for="UserId" asp-items="@Model.Users">
+                    <option value="@null" selected>Not assigned</option>
+                </select>
+                <label asp-for="UserId">User</label>
+            </div>
+
+            @if (Model.Discriminator == "Task")
+            {
+                if (Model.RemainingWork == null)
+                {
+                    Model.RemainingWork = 1;
+                }
+
+                <div class="form-floating mb-3 mx-auto">
+                    <select id="activity" class="form-select mb-3" aria-label="Activity select" asp-for="Activity" asp-items="@Html.GetEnumSelectList<ITSM.Models.Activities>()"></select>
+                    <label asp-for="Activity">Activity</label>
+                </div>
+                <div class="p-3 mb-3 mx-auto border rounded">
+                    <label class="text-muted" asp-for="RemainingWork">Remaning work <span id="remaningWorkText"></span></label>
+                    <input id="remaningWork" type="range" min="0" max="100" asp-for="RemainingWork" class="form-range" />
+                    <span asp-validation-for="RemainingWork" class="text-danger"></span>
+                </div>
+            }
+
+            @if (Model.Discriminator == "Issue")
+            {
+                if (Model.Effort == null)
+                {
+                    Model.Effort = 1;
+                }
+
+                <div class="p-3 mb-3 mx-auto border rounded">
+                    <label class="text-muted" asp-for="Effort">Effort <span id="effortText"></span></label>
+                    <input id="effort" type="range" min="1" max="10" asp-for="Effort" class="form-range" placeholder="Effort" />
+                    <span asp-validation-for="Effort" class="text-danger"></span>
+                </div>
+            }
+
+            @if (Model.Discriminator == "Epic")
+            {
+                <div class="p-3 mb-3 mx-auto border rounded">
+                    <label class="text-muted" asp-for="StartDate">Start Date</label>
+                    <input id="startDate" type="date" asp-for="StartDate" placeholder="Start date" />
+                    <span asp-validation-for="StartDate" class="text-danger"></span>
+                </div>
+
+                <div class="p-3 mb-3 mx-auto border rounded">
+                    <label class="text-muted" asp-for="EndDate">End Date</label>
+                    <input id="endDate" type="date" asp-for="EndDate" placeholder="End date" />
+                    <span asp-validation-for="EndDate" class="text-danger"></span>
+                </div>
+            }
+
+            <div class="p-3 mb-3 mx-auto border rounded">
+                <label class="text-muted" asp-for="Priority">Priority <span id="priorityText"></span></label>
+                <input id="priority" type="range" min="1" max="10" asp-for="Priority" class="form-range" placeholder="Priority" />
+                <span asp-validation-for="Priority" class="text-danger"></span>
+            </div>
+
+            <button id="saveChanges" type="submit" class="btn btn-outline-primary rounded-0 px-3 float-end @(Model.Id == 0 ? "" : "d-none")">Save changes</button>
+        </div>
+    </div>
+</form>
+
+@section Scripts {
+
+    <script type="text/javascript">
+
+        window.addEventListener('DOMContentLoaded', function () {
+
+            if (priorityRange && priorityRange.value == 1) {
+                priorityTextEl.innerHTML = `(default = 1)`;
+            } else if (priorityRange) {
+                changeRangeValue(priorityRange, priorityTextEl);
+            }
+
+            if (effortRange && effortRange.value == 1) {
+                effortTextEl.innerHTML = `(default = 1)`;
+            } else if (effortRange) {
+                changeRangeValue(effortRange, effortTextEl);
+            }
+
+            if (remaningWorkRange && remaningWorkRange.value == 1) {
+                remaningWorkText.innerHTML = `(default = 1%)`;
+            } else if (remaningWorkRange) {
+                changePercentValue(remaningWorkRange, remaningWorkText);
+            }
+        });
+
+        const priorityRange = document.getElementById('priority');
+        const priorityTextEl = document.getElementById('priorityText');
+
+        const effortRange = document.getElementById('effort');
+        const effortTextEl = document.getElementById('effortText');
+
+        const remaningWorkRange = document.getElementById('remaningWork');
+        const remaningWorkText = document.getElementById('remaningWorkText');
+
+        priorityRange.addEventListener('input', function () {
+            changeRangeValue(priorityRange, priorityTextEl);
+        });
+
+
+
+        if (effortRange) {
+            effortRange.addEventListener('input', function () {
+                changeRangeValue(effortRange, effortTextEl);
+            });
+        }
+
+
+
+        if (remaningWorkRange) {
+            remaningWorkRange.addEventListener('input', function () {
+                changePercentValue(remaningWorkRange, remaningWorkText);
+            });
+        }
+
+        function changeRangeValue(rangeElement, textElement) {
+            textElement.innerHTML = `${rangeElement.value}`;
+
+            textElement.className = '';
+
+            if (rangeElement.value < 4) {
+                textElement.classList.add('text-success');
+            } else if (rangeElement.value < 7) {
+                textElement.classList.add('text-warning');
+            } else if (rangeElement.value < 10) {
+                textElement.classList.add('text-danger');
+            } else {
+                textElement.classList.add('text-primary');
+            }
+        }
+
+        function changePercentValue(rangeElement, textElement) {
+            textElement.innerHTML = `${rangeElement.value} %`;
+
+            textElement.className = '';
+
+            if (rangeElement.value <= 30) {
+                textElement.classList.add('text-success');
+            } else if (rangeElement.value <= 70) {
+                textElement.classList.add('text-warning');
+            } else {
+                textElement.classList.add('text-danger');
+            }
+        }
+
+    </script>
+
+    <script>
+
+        const createMode = @((Model.Id == 0).ToString().ToLower());
+
+        window.addEventListener('DOMContentLoaded', function () {
+
+            const descriptionInput = document.getElementById('description');
+
+            if (descriptionInput.innerText != null && descriptionInput.innerText != '') {
+                var delta = JSON.parse(descriptionInput.innerHTML);
+                quill.setContents(delta);
+            }
+
+            quill.on('text-change', function () {
+                descriptionInput.innerHTML = JSON.stringify(quill.getContents());
+                unsavedChanges = true;
+                if (!createMode) {
+                    document.querySelector('#saveChanges').classList.remove('d-none');
+                }
+            });
+
+            if (!createMode) {
+                quill.disable();
+            }
+        });
+
+        window.onload = function () {
+            window.addEventListener("beforeunload", function (e) {
+                if (unsavedChanges) {
+                    e.preventDefault();
+                    e.returnValue = '';
+                }
+            });
+        };
+
+        document.querySelector('#saveChanges').addEventListener('click', function () {
+            unsavedChanges = false;
+        })
+
+        var quill = new Quill('#editor-container', {
+            modules: {
+                formula: true,
+                syntax: true,
+                toolbar: '#toolbar-container'
+            },
+            placeholder: 'Put your description here...',
+            theme: 'snow'
+        });
+
+        var isEditorDisabled = true;
+
+        const editorContainer = document.getElementById('standalone-container');
+
+        editorContainer.addEventListener('click', function (range) {
+            if (isEditorDisabled) {
+                document.querySelector('#toolbar-container').classList.remove('d-none');
+                document.querySelector('#editor-container').classList.remove('border-0');
+
+                quill.enable();
+                quill.focus();
+                isEditorDisabled = false;
+            }
+        });
+
+        document.onkeydown = function (e) {
+            e = e || window.event;
+            if (e.keyCode == 27 && !isEditorDisabled) {
+                document.querySelector('#toolbar-container').classList.add('d-none');
+                document.querySelector('#editor-container').classList.add('border-0');
+
+                quill.blur();
+                quill.disable();
+                isEditorDisabled = true;
+            }
+        };
+
+
+        var unsavedChanges = false;
+        const titleInput = document.getElementById('title');
+        const stateInput = document.getElementById('state');
+        const projectInput = document.getElementById('project');
+        const userInput = document.getElementById('user');
+        const priorityInput = document.getElementById('priority');
+        const effortInput = document.getElementById('effort');
+        const startDateInput = document.getElementById('startDate');
+        const endDateInput = document.getElementById('endDate');
+        const activityInput = document.getElementById('activity');
+        const remainingWorkInput = document.getElementById('remaningWork');
+
+        const changableElements = [titleInput, stateInput, projectInput, userInput, priorityInput, effortInput, startDateInput, endDateInput, activityInput, remainingWorkInput];
+
+        for (const item of changableElements) {
+            if (item) {
+                item.addEventListener('input', function () {
+                    if (!createMode) {
+                        document.querySelector('#saveChanges').classList.remove('d-none');
+                    }
+                    unsavedChanges = true;
+                });
+            }
+        }
+
+    </script>
+
+}

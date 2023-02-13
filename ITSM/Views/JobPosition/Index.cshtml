@@ -1,0 +1,31 @@
+﻿@model PositionViewModel
+
+<form class="d-flex justify-content-center" method="post">
+    <div class="col-12 col-md-4 px-3">
+        <label asp-for="Position.Position">Position</label>
+        <input class="form-control mb-3" asp-for="Position.Position" />
+        <button class="btn btn-primary" type="submit">Submit</button>
+    </div>
+</form>
+
+<div class="row d-flex justify-content-center">
+    <div class="col-12 col-md-4 px-3">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th scope="col">Id</th>
+                    <th scope="col">Position</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model.JobPositions)
+                {
+                    <tr>
+                        <td>@item.Id</td>
+                        <td>@item.Position</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

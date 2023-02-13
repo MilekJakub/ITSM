@@ -1,4 +1,4 @@
-﻿@model IEnumerable<TruncatedStateViewModel>
+﻿@model IEnumerable<State>
 
 <nav id="toolbar" class="navbar navbar-expand-lg navbar-light border-bottom border-dark">
     <div class="container-fluid">
@@ -7,93 +7,80 @@
         </button>
         <div class="collapse navbar-collapse justify-content-start">
             <ul class="navbar-nav flex-grow-1">
-                <li class="nav-item nav-item-hover">
-                    <a class="nav-link" asp-action="Details">
-                        <i class="bi bi-plus-lg"></i>
-                        Add new
-                    </a>
-                </li>
+                @if(User.IsInRole("Admin"))
+                {
+                    <li class="nav-item nav-item-hover">
+                        <a class="nav-link" asp-action="Details">
+                            <i class="bi bi-plus-lg"></i>
+                            Add new
+                        </a>
+                    </li>
+                }
                 <li class="nav-item mx-2">
                     <input type="search" id="searchQuery" class="form-control" placeholder="Search..." aria-label="Search" />
-                </li>
-                <li class="nav-item nav-item-hover dropdown">
-                    <a class="nav-link dropdown-toggle" id="dropdownMenuButton" role="button" data-bs-toggle="dropdown" data-bs-auto-close="outside" aria-expanded="false">Filter</a>
-                    <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                        <li>
-                            <label class="dropdown-item d-flex justify-content-md-between" href="#">
-                                To do
-                                <input class="form-check-input" type="checkbox" name="tasks" value="tasks" id="TasksCheckbox" checked />
-                            </label>
-                        </li>
-                        <li>
-                            <label class="dropdown-item d-flex justify-content-md-between" href="#">
-                                Doing
-                                <input class="form-check-input" type="checkbox" name="issues" value="issues" id="IssuesCheckbox" checked />
-                            </label>
-                        </li>
-                        <li>
-                            <label class="dropdown-item d-flex justify-content-md-between" href="#">
-                                Completed
-                                <input class="form-check-input" type="checkbox" name="epics" value="epics" id="EpicsCheckbox" checked />
-                            </label>
-                        </li>
-                    </ul>
                 </li>
             </ul>
         </div>
     </div>
 </nav>
 
-<table class="table table-hover">
-    <thead>
-        <tr>
-            <th width="5%" scope="col">Id</th>
-            <th width="15%" scope="col">Name</th> @*max 25 chars*@
-            <th width="50%" scope="col">Description</th> @*max 100 chars*@
-            <th width="25%" scope="col">Work Items</th> @*max 50 chars*@
-            <th width="5%" scope="col"></th> @*max 50 chars*@
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var item in Model)
-        {
+@if (!Model.Any())
+{
+    <h3>There are no states to show.</h3>
+}
+else
+{
+    <table class="table table-hover">
+        <thead>
             <tr>
-                <td>@item.Id</td>
-                <td><a asp-action="Details" asp-route-id="@item.Id">@item.Name</a></td>
-                <td>@item.Description</td>
-                <td>
-                    @item.WorkItems
-                </td>
-                <td>
-                    <a id="contextMenu" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                        <i class="bi bi-three-dots"></i>
-                    </a>
-                    <ul class="dropdown-menu" aria-labelledby="contextMenu">
-                        <li>
-                            <!-- MODAL TRIGGER -->
-                            <a href="#" class="dropdown-item d-flex justify-content-md-between" data-bs-toggle="modal" data-bs-target="#deleteModal@(item.Id)">Delete</a>
-                        </li>
-                    </ul>
-                    <!-- MODAL -->
-                    <div class="modal fade" id="deleteModal@(item.Id)" tabindex="-1" aria-labelledby="deleteModal@(item.Id)Label" aria-hidden="true">
-                        <div class="modal-dialog">
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                    <h1 class="modal-title fs-5" id="exampleModalLabel">@item.Name</h1>
-                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                </div>
-                                <div class="modal-body">
-                                    Are you sure you want to delete this project?
-                                </div>
-                                <div class="modal-footer">
-                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                                    <a class="btn btn-danger" asp-controller="Project" asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                <th width="5%" scope="col">Id</th>
+                <th scope="col">Name</th> @*max 25 chars*@
+                @*<th width="75%" scope="col">Work Items</th>*@
+                <th width="5%" scope="col"></th> @*max 50 chars*@
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>@item.Id</td>
+                    <td><a asp-action="Details" asp-route-id="@item.Id">@item.Name</a></td>
+                    @*<td>
+                        @item.WorkItems
+                    </td>*@
+                    <td>
+                        <a id="contextMenu" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class="bi bi-three-dots"></i>
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="contextMenu">
+                            <li>
+                                <!-- MODAL TRIGGER -->
+                                <a href="#" class="dropdown-item d-flex justify-content-md-between" data-bs-toggle="modal" data-bs-target="#deleteModal@(item.Id)">Delete</a>
+                            </li>
+                        </ul>
+                        <!-- MODAL -->
+                        <div class="modal fade" id="deleteModal@(item.Id)" tabindex="-1" aria-labelledby="deleteModal@(item.Id)Label" aria-hidden="true">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h1 class="modal-title fs-5" id="exampleModalLabel">@item.Name</h1>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                        Are you sure you want to delete this state?
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                        <form asp-action="Delete" asp-route-id="@item.Id">
+                                            <button type="submit" class="btn btn-danger">Delete</button>
+                                        </form>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
-                </td>
-            </tr>
-        }
-    </tbody>
-</table>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}

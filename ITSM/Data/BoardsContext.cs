@@ -18,7 +18,8 @@ namespace ITSM.Data
         public DbSet<Tag> Tags { get; set; }
         public DbSet<JobPosition> JobPositions { get; set; }
         public DbSet<Project> Projects { get; set; }
-            
+        public DbSet<State> States { get; set; }
+
         public BoardsContext(DbContextOptions<BoardsContext> options) : base(options) { }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -120,7 +121,18 @@ namespace ITSM.Data
 
                 builder
                     .Property(x => x.RemainingWork)
-                    .HasColumnType("DECIMAL(5,2)");
+                    .HasColumnType("TINYINT");
+            });
+
+            modelBuilder.Entity<Epic>(builder =>
+            {
+                builder
+                    .Property(x => x.StartDate)
+                    .IsRequired();
+
+                builder
+                    .Property(x => x.EndDate)
+                    .IsRequired();
             });
 
             modelBuilder.Entity<Comment>(builder =>
@@ -134,9 +146,18 @@ namespace ITSM.Data
                     .ValueGeneratedOnUpdate();
 
                 builder
+                    .Property(x => x.Message)
+                    .IsRequired();
+
+                builder
                     .HasOne(x => x.WorkItem)
                     .WithMany(y => y.Comments)
                     .HasForeignKey(x => x.WorkItemId)
+                    .OnDelete(DeleteBehavior.NoAction);
+
+                builder.HasOne(x => x.Project)
+                    .WithMany(y => y.Comments)
+                    .HasForeignKey(x => x.ProjectId)
                     .OnDelete(DeleteBehavior.NoAction);
             });
 
@@ -152,6 +173,18 @@ namespace ITSM.Data
                 builder
                     .Property(x => x.Name)
                     .HasMaxLength(50);
+
+                builder
+                    .HasMany(x => x.Comments)
+                    .WithOne(x => x.Project)
+                    .HasForeignKey(x => x.ProjectId)
+                    .OnDelete(DeleteBehavior.Cascade);
+
+                builder
+                    .HasMany(x => x.WorkItems)
+                    .WithOne(x => x.Project)
+                    .HasForeignKey(x => x.ProjectId)
+                    .OnDelete(DeleteBehavior.Cascade);
             });
 
             modelBuilder.Entity<State>(builder =>

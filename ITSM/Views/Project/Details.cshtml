@@ -1,99 +1,359 @@
-﻿@model ProjectDetailsViewModel
+﻿@using Microsoft.AspNetCore.Identity;
+@using ITSM.ViewModels;
+@model ProjectDetailsViewModel
 
-<form method="post" asp-action="@(Model.Project.Id == 0 ? "Create" : "Update")">
-    <div class="row">
-        <div class="col-12 col-md-6 px-3">
-            <div class="form-floating mb-3 mx-auto">
+@inject UserManager<IdentityUser> UserManager
+
+@{
+    var user = UserManager.GetUserAsync(User).Result as User;
+}
+
+<form class="mb-5" method="post" asp-action="@(Model.Project.Id == 0 ? "Create" : "Update")">
+    <div class="row d-flex justify-content-center">
+
+        <div class="col-md-12 col-xl-6 px-3">
+            <div class="form-floating mb-5 mx-auto">
                 <input hidden asp-for="Project.Id" />
-                <input asp-for="Project.Name" class="form-control" placeholder="Project name" />
+                <textarea hidden id="description" asp-for="Project.Description"></textarea>
+                <input id="projectName" asp-for="Project.Name" class="form-control" placeholder="Project name" />
                 <label asp-for="Project.Name">Project name</label>
                 <span asp-validation-for="Project.Name" class="text-danger"></span>
             </div>
-            <div class="form-floating mb-3">
-                <textarea id="projectDescription" asp-for="Project.Description" class="form-control" placeholder="Project description" style="resize: vertical; min-height: 64px; max-height: 320px;"></textarea>
-                <label asp-for="Project.Description">Project description</label>
-                <span asp-validation-for="Project.Description" class="text-danger"></span>
-            </div>
-            <button type="submit" class="btn btn-outline-primary rounded-0 px-3 float-end">Save changes</button>
-        </div>
-        <div class="col-12 col-md-6 px-3">
-            @if (Model.Project.WorkItems != null && Model.Project.WorkItems.Any())
-            {
-                <h4 class="text-center">Work items in this project.</h4>
-                
-                <table class="table">
-                    <thead>
-                        <tr>
-                            <th scope="col">Id</th>
-                            <th scope="col">Name</th>
-                            <th scope="col">Priority</th>
-                            <th scope="col">State</th>
-                            <th scope="col">User</th>
-                            <th scope="col">Type</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach (var item in Model.Project.WorkItems)
-                        {
-                            <tr>
-                                <td>@item.Id</td>
-                                <td>@item.Title</td>
-                                <td>@item.Priority</td>
-                                <td>@item.State.Name</td>
-                                <td>@(item.User == null ? "Unassigned" : $"{item.User.Forename} {item.User.Surname}")</td>
-                                <td>@item.Discriminator</td>
-                            </tr>
-                        }
-                    </tbody>
-                </table>
-            }
-            @if (Model.UnassignedWorkItems != null && Model.UnassignedWorkItems.Any())
-            {
-                <h4 class="text-center">Unassigned work items.</h4>
 
-                <table class="table">
-                    <thead>
-                        <tr>
-                            <th scope="col">Id</th>
-                            <th scope="col">Name</th>
-                            <th scope="col">Priority</th>
-                            <th scope="col">State</th>
-                            <th scope="col">User</th>
-                            <th scope="col">Type</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach (var item in Model.UnassignedWorkItems)
-                        {
-                            <tr>
-                                <td>@item.Id</td>
-                                <td>@item.Title</td>
-                                <td>@item.Priority</td>
-                                <td>@item.State.Name</td>
-                                <td>@(item.User == null ? "Unassigned" : $"{item.User.Forename} {item.User.Surname}")</td>
-                                <td>@item.Discriminator</td>
-                            </tr>
-                        }
-                    </tbody>
-                </table>
-            }
+            <div id="standalone-container">
+                <div id="toolbar-container" class="d-none">
+                    <span class="ql-formats">
+                        <select class="ql-font"></select>
+                        <select class="ql-size"></select>
+                    </span>
+                    <span class="ql-formats">
+                        <button class="ql-bold"></button>
+                        <button class="ql-italic"></button>
+                        <button class="ql-underline"></button>
+                        <button class="ql-strike"></button>
+                    </span>
+                    <span class="ql-formats">
+                        <select class="ql-color"></select>
+                        <select class="ql-background"></select>
+                    </span>
+                    <span class="ql-formats">
+                        <button class="ql-script" value="sub"></button>
+                        <button class="ql-script" value="super"></button>
+                    </span>
+                    <span class="ql-formats">
+                        <button class="ql-header" value="1"></button>
+                        <button class="ql-header" value="2"></button>
+                        <button class="ql-blockquote"></button>
+                        <button class="ql-code-block"></button>
+                    </span>
+                    <span class="ql-formats">
+                        <button class="ql-list" value="ordered"></button>
+                        <button class="ql-list" value="bullet"></button>
+                        <button class="ql-indent" value="-1"></button>
+                        <button class="ql-indent" value="+1"></button>
+                    </span>
+                    <span class="ql-formats">
+                        <button class="ql-direction" value="rtl"></button>
+                        <select class="ql-align"></select>
+                    </span>
+                    <span class="ql-formats">
+                        <button class="ql-link"></button>
+                        <button class="ql-image"></button>
+                        <button class="ql-video"></button>
+                        <button class="ql-formula"></button>
+                    </span>
+                    <span class="ql-formats">
+                        <button class="ql-clean"></button>
+                    </span>
+                </div>
+                <div id="editor-container" class="border shadow"></div>
+            </div>
+
+            <button id="saveChanges" type="submit" class="btn btn-primary rounded-0 px-3 float-end @(Model.Project.Id == 0 ? "" : "d-none")">Save changes</button>
         </div>
     </div>
 </form>
 
+<div class="row mb-5 d-flex justify-content-center">
+    <div class="col-md-12 col-xl-6 px-3">
+        @if (Model.Project.WorkItems != null && Model.Project.WorkItems.Any())
+        {
+            <h4>Assigned to this project.</h4>
+
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th scope="col">Id</th>
+                        <th scope="col">Name</th>
+                        <th scope="col">Priority</th>
+                        <th scope="col">State</th>
+                        <th scope="col">User</th>
+                        <th scope="col">Type</th>
+                        <th scope="col"></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model.Project.WorkItems)
+                    {
+                        <tr>
+                            <td>@item.Id</td>
+                            <td><a asp-controller="WorkItem" asp-action="Details" asp-route-id="@item.Id">@item.Title</a></td>
+                            <td>@item.Priority</td>
+                            <td>@(item.State?.Name ?? "Unassigned")</td>
+                            <td>@(item.User == null ? "Unassigned" : $"{item.User.Forename} {item.User.Surname}")</td>
+                            <td>@item.Discriminator</td>
+                            <td>
+                                <a id="contextMenu" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                    <i class="bi bi-three-dots"></i>
+                                </a>
+                                <ul class="dropdown-menu" aria-labelledby="contextMenu">
+                                    <li>
+                                        <a href="#" class="dropdown-item d-flex justify-content-md-between" data-bs-toggle="modal">Mark &raquo;</a>
+                                        <ul class="dropdown-menu dropdown-submenu">
+                                            <li>
+                                                <a class="dropdown-item" href="#">Completed</a>
+                                            </li>
+                                            <li>
+                                                <a class="dropdown-item" href="#">To do</a>
+                                            </li>
+                                            <li>
+                                                <a class="dropdown-item" href="#">Currently working</a>
+                                            </li>
+                                        </ul>
+                                    </li>
+                                </ul>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        }
+    </div>
+</div>
+
+<div class="row my-5 d-flex justify-content-center">
+    <div class="col-md-12 mb-5 col-xl-6 px-3">
+        @if (Model.UnassignedWorkItems != null && Model.UnassignedWorkItems.Any())
+        {
+            <h4>Not assigned to any project.</h4>
+
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th scope="col">Id</th>
+                        <th scope="col">Name</th>
+                        <th scope="col">Priority</th>
+                        <th scope="col">State</th>
+                        <th scope="col">User</th>
+                        <th scope="col">Type</th>
+                        <th scope="col"></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model.UnassignedWorkItems)
+                    {
+                        <tr>
+                            <td>@item.Id</td>
+                            <td><a asp-controller="WorkItem" asp-action="Details" asp-route-id="@item.Id">@item.Title</a></td>
+                            <td>@item.Priority</td>
+                            <td>@(item.State?.Name ?? "Unassigned")</td>
+                            <td>@(item.User == null ? "Unassigned" : $"{item.User.Forename} {item.User.Surname}")</td>
+                            <td>@item.Discriminator</td>
+                            <td>
+                                <a id="contextMenu" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                    <i class="bi bi-three-dots"></i>
+                                </a>
+                                <ul class="dropdown-menu" aria-labelledby="contextMenu">
+                                    <li>
+                                        <a href="#" class="dropdown-item d-flex justify-content-md-between" data-bs-toggle="modal">Assign to this</a>
+                                    </li>
+                                </ul>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        }
+    </div>
+</div>
+
+
+@if (Model.Project.Id != 0)
+{
+    <div class="row d-flex justify-content-center text-black mt-5">
+        <div class="col-md-12 col-xl-6 p-0">
+            <h3>Discussion</h3>
+            <hr />
+        </div>
+    </div>
+
+
+    @if (Model.Project.Id != 0 && user != null)
+    {
+        <form method="post" class="row d-flex justify-content-center p-0" asp-controller="Comment" asp-action="AddCommentToProject" asp-route-projectId="@Model.Project.Id">
+            <div class="col-md-12 col-xl-6 p-0">
+                <div class="mb-3 p-3 border rounded">
+                    <label class="fs-5 mb-3" for="commentTextArea">@user.Forename @user.Surname</label>
+                    <textarea id="commentContent" name="message" class="form-control" placeholder="Leave a comment here" style="resize: none; min-height: 64px; max-height: 320px;"></textarea>
+                    <button type="submit" class="btn btn-dark rounded-0 mt-3">Submit</button>
+                </div>
+            </div>
+        </form>
+    }
+
+    <section class="mt-5">
+        @if (Model.Project.Comments != null && Model.Project.Comments.Any())
+        {
+            @foreach (var comment in Model.Project.Comments)
+            {
+                <div class="row my-4 d-flex justify-content-center">
+                    <div class="col-md-12 col-xl-6 p-3 border rounded">
+                        <div class="row">
+                            <div class="col-10">
+                                <span class="fw-bold">@comment.User.Forename @comment.User.Surname</span>
+                                <span class="text-muted mb-3">@comment.CreationDate</span>
+                            </div>
+                            @if (comment.UserId == user?.Id)
+                            {
+                                <div class="col-2 d-flex justify-content-end">
+                                    <a id="contextMenu" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                        <i class="bi bi-three-dots"></i>
+                                    </a>
+                                    <ul class="dropdown-menu" aria-labelledby="contextMenu">
+                                        <li>
+                                            <!-- MODAL TRIGGER -->
+                                            <a href="#" class="dropdown-item d-flex justify-content-md-between" data-bs-toggle="modal" data-bs-target="#deleteModal@(comment.Id)">Delete</a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            }
+                        </div>
+                        <div class="row">
+                            <div class="col-12">
+                                <textarea readonly class="form-control-plaintext comment" style="resize: none;">@comment.Message</textarea>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        }
+    </section>
+}
+
 @section Scripts {
-
     <script type="text/javascript">
-        var textarea = document.getElementById("projectDescription");
-        var heightLimit = 320;
 
-        textarea.style.height = "";
-        textarea.style.height = Math.min(textarea.scrollHeight + 2, heightLimit) + "px";
+        const commentTextArea = document.getElementById("commentContent");
+        const commentHeightLimit = 320;
 
-        textarea.oninput = function () {
-            textarea.style.height = "";
-            textarea.style.height = Math.min(textarea.scrollHeight + 2, heightLimit) + "px";
-        };
+        if (commentTextArea) {
+            commentTextArea.style.height = "";
+            commentTextArea.style.height = Math.min(commentTextArea.scrollHeight + 2, commentHeightLimit) + "px";
+
+            commentTextArea.oninput = function () {
+                commentTextArea.style.height = "";
+                commentTextArea.style.height = Math.min(commentTextArea.scrollHeight + 2, commentHeightLimit) + "px";
+            };
+        }
+
+        const comments = document.querySelectorAll('.comment');
+
+        for (let comment of comments) {
+            comment.style.height = "";
+            comment.style.height = comment.scrollHeight + 2 + "px";
+        }
     </script>
 
+    <script>
+
+        const createMode = @((Model.Project.Id == 0).ToString().ToLower());
+
+        window.addEventListener('DOMContentLoaded', function () {
+
+            const descriptionInput = document.getElementById('description');
+
+            if (descriptionInput.innerText != null && descriptionInput.innerText != '') {
+                var delta = JSON.parse(descriptionInput.innerHTML);
+                quill.setContents(delta);
+            }
+
+            quill.on('text-change', function () {
+                descriptionInput.innerHTML = JSON.stringify(quill.getContents());
+                unsavedChanges = true;
+                if (!createMode) {
+                    document.querySelector('#saveChanges').classList.remove('d-none');
+                }
+            });
+
+            if (!createMode) {
+                quill.disable();
+            }
+        });
+
+        window.onload = function () {
+            window.addEventListener("beforeunload", function (e) {
+                if (unsavedChanges) {
+                    e.preventDefault();
+                    e.returnValue = '';
+                }
+            });
+        };
+
+        document.querySelector('#saveChanges').addEventListener('click', function () {
+            unsavedChanges = false;
+        })
+
+        var quill = new Quill('#editor-container', {
+            modules: {
+                formula: true,
+                syntax: true,
+                toolbar: '#toolbar-container'
+            },
+            placeholder: 'Put your description here...',
+            theme: 'snow'
+        });
+
+        var isEditorDisabled = true;
+
+        const editorContainer = document.getElementById('standalone-container');
+
+        editorContainer.addEventListener('click', function (range) {
+            if (isEditorDisabled) {
+                document.querySelector('#toolbar-container').classList.remove('d-none');
+                document.querySelector('#editor-container').classList.remove('border-0');
+
+                quill.enable();
+                quill.focus();
+                isEditorDisabled = false;
+            }
+        });
+
+        document.onkeydown = function (e) {
+            e = e || window.event;
+            if (e.keyCode == 27 && !isEditorDisabled) {
+                document.querySelector('#toolbar-container').classList.add('d-none');
+                document.querySelector('#editor-container').classList.add('border-0');
+
+                quill.blur();
+                quill.disable();
+                isEditorDisabled = true;
+            }
+        };
+
+        var descriptionInput = document.getElementById('description');
+
+        quill.on('text-change', function () {
+            descriptionInput.innerHTML = JSON.stringify(quill.getContents());
+        });
+
+
+        var unsavedChanges = false;
+        const nameInput = document.getElementById('projectName');
+
+        nameInput.addEventListener('input', function () {
+            document.querySelector('#saveChanges').classList.remove('d-none');
+            unsavedChanges = true;
+        });
+
+    </script>
 }

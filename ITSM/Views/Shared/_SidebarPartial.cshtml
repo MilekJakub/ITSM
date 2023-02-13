@@ -3,41 +3,52 @@
 @inject SignInManager<IdentityUser> SignInManager
 @inject UserManager<IdentityUser> UserManager
 
+@{
+    var user = UserManager.GetUserAsync(User).Result as User;
+}
+
 <nav id="sidebarMenu" class="collapse d-lg-block sidebar bg-white">
     <div class="d-flex flex-column flex-shrink-0 position-sticky p-3 text-bg-dark bg-dark sidebar-height">
         <ul class="nav nav-pills flex-column mb-auto">
-            
-            <li class="nav-item">
-                <a class="nav-link text-white @(ViewContext.RouteData.Values["Controller"]?.ToString() == "Home" ? "active" : "")" href="/Home">
-                    <i class="bi bi-house-fill"></i>
-                    Home
-                </a>
-            </li>
-            <li>
-                <a class="nav-link text-white @(ViewContext.RouteData.Values["Controller"]?.ToString() == "WorkItem" ? "active" : "")" asp-controller="WorkItem" asp-action="Index">
-                    <i class="bi bi-clipboard2-check-fill"></i>
-                    Work Items
-                </a>
-            </li>
-            <li>
-                <a class="nav-link text-white @(ViewContext.RouteData.Values["Controller"]?.ToString() == "Project" ? "active" : "")" asp-controller="Project" asp-action="Index">
-                    <i class="bi bi-box-fill"></i>
-                    Projects
-                </a>
-            </li>
-            <li>
-                <a class="nav-link text-white @(ViewContext.RouteData.Values["Controller"]?.ToString() == "State" ? "active" : "")" asp-controller="State" asp-action="Index">
-                    <i class="bi bi-x-diamond-fill"></i>
-                    Item States
-                </a>
-            </li>
-            <li>
-                <a class="nav-link text-white @(ViewContext.RouteData.Values["Controller"]?.ToString() == "Tag" ? "active" : "")" asp-controller="Tag" asp-action="Index">
-                    <i class="bi bi-tags"></i>
-                    Tags
-                </a>
-            </li>
 
+
+            @if (User.Identity.IsAuthenticated)
+            {
+                <li class="nav-item">
+                    <a class="nav-link text-white @(ViewContext.RouteData.Values["Controller"]?.ToString() == "Home" ? "active" : "")" href="/Home">
+                        <i class="bi bi-house-fill"></i>
+                        Home
+                    </a>
+                </li>
+                <li>
+                    <a class="nav-link text-white @(ViewContext.RouteData.Values["Controller"]?.ToString() == "WorkItem" ? "active" : "")" asp-controller="WorkItem" asp-action="Index">
+                        <i class="bi bi-clipboard2-check-fill"></i>
+                        Work Items
+                    </a>
+                </li>
+                <li>
+                    <a class="nav-link text-white @(ViewContext.RouteData.Values["Controller"]?.ToString() == "Project" ? "active" : "")" asp-controller="Project" asp-action="Index">
+                        <i class="bi bi-box-fill"></i>
+                        Projects
+                    </a>
+                </li>
+                <li>
+                    <a class="nav-link text-white @(ViewContext.RouteData.Values["Controller"]?.ToString() == "State" ? "active" : "")" asp-controller="State" asp-action="Index">
+                        <i class="bi bi-x-diamond-fill"></i>
+                        Item States
+                    </a>
+                </li>
+
+                @if (User.IsInRole("Admin"))
+                {
+                    <li>
+                        <a class="nav-link text-white @(ViewContext.RouteData.Values["Controller"]?.ToString() == "Tools" ? "active" : "")" asp-controller="Tools" asp-action="Index">
+                            <i class="bi bi-wrench"></i>
+                            Tools
+                        </a>
+                    </li>
+                }
+            }
         </ul>
         <hr>
 
@@ -45,20 +56,24 @@
         {
             <div class="dropdown w-100 mt-auto">
                 <a href="#" class="text-white text-center text-decoration-none dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
-                    <strong>mdo</strong>
+                    <strong>@user?.Forename @user?.Surname</strong>
                 </a>
-                <ul class="dropdown-menu dropdown-menu-dark text-small shadow" style="">
-                    <li><a class="dropdown-item" href="#">Profile</a></li>
+                <ul class="dropdown-menu dropdown-menu-dark text-small shadow">
+                    <li><a class="dropdown-item" asp-area="Identity" asp-page="/Account/Manage/Index">Profile</a></li>
                     <li><hr class="dropdown-divider"></li>
-                    <li><a class="dropdown-item" href="#">Sign out</a></li>
+                    <li>
+                        <form asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home")">
+                            <button type="submit" class="dropdown-item">Sign out</button>
+                        </form>
+                    </li>
                 </ul>
             </div>
         }
         else
         {
             <div class="d-flex mt-auto justify-content-around">
-                <a class="badge rounded-pill text-center text-decoration-none @(ViewData["action"] == "Login" ? "bg-white text-black" : "text-white")" id="login" asp-area="Identity" asp-page="/Account/Login">Login</a>
-                <a class="badge rounded-pill text-center text-decoration-none @(ViewData["action"] == "Register" ? "bg-white text-black" : "text-white")" id="register" asp-area="Identity" asp-page="/Account/Register">Register</a>
+                <a class="badge rounded-pill text-center text-decoration-none @(ViewData["action"] as string == "Login" ? "bg-white text-black" : "text-white")" id="login" asp-area="Identity" asp-page="/Account/Login">Login</a>
+                <a class="badge rounded-pill text-center text-decoration-none @(ViewData["action"] as string == "Register" ? "bg-white text-black" : "text-white")" id="register" asp-area="Identity" asp-page="/Account/Register">Register</a>
             </div>
         }
     </div>
