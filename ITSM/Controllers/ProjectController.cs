@@ -29,12 +29,12 @@ namespace ITSM.Controllers
         [HttpPost]
         public IActionResult Create(ProjectDetailsViewModel projectDetailsVM)
         {
-            if(!ModelState.IsValid)
+            if (!ModelState.IsValid)
                 return View(nameof(Details), projectDetailsVM);
 
             var result = _projectService.Create(projectDetailsVM);
 
-            if(result) TempData["success"] = "Project has been created successfully.";
+            if (result) TempData["success"] = "Project has been created successfully.";
             else TempData["error"] = "Something went wrong while creating a project.";
 
             return RedirectToAction(nameof(Index));
@@ -45,7 +45,7 @@ namespace ITSM.Controllers
         {
             var projectDetailsVM = _projectService.GetProjectDetailsVM(id);
 
-            if(projectDetailsVM == null)
+            if (projectDetailsVM == null)
                 return RedirectToAction(nameof(Index));
 
             return View(projectDetailsVM);
@@ -54,12 +54,12 @@ namespace ITSM.Controllers
         [HttpPost]
         public IActionResult Update(ProjectDetailsViewModel projectDetailsVM, int id)
         {
-            if(!ModelState.IsValid)
+            if (!ModelState.IsValid)
                 return RedirectToAction(nameof(Details), new { projectDetailsVM.Project.Id });
 
             var result = _projectService.Update(projectDetailsVM);
 
-            if(result) TempData["success"] = "Project has been updated succesfully.";
+            if (result) TempData["success"] = "Project has been updated succesfully.";
             else TempData["error"] = "Something went wrong while updating the project.";
 
             return RedirectToAction(nameof(Details), new { projectDetailsVM.Project.Id });
@@ -69,7 +69,7 @@ namespace ITSM.Controllers
         {
             var result = _projectService.Delete(id);
 
-            if(result) TempData["success"] = "Project has been deleted succesfully.";
+            if (result) TempData["success"] = "Project has been deleted succesfully.";
             else TempData["error"] = "Something went wrong while deleting the project.";
 
             return RedirectToAction(nameof(Index));

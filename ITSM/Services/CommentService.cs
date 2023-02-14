@@ -8,8 +8,7 @@ namespace ITSM.Services
 {
     public interface ICommenctService
     {
-        bool AddCommentToProject(int projectId, string message, ClaimsPrincipal claims);
-        bool AddCommentToWorkItem(int projectId, string message, ClaimsPrincipal claims);
+        bool AddComment(int projectId, string message, ClaimsPrincipal claims);
         bool DeleteComment(int commentId, ClaimsPrincipal claims);
     }
 
@@ -22,7 +21,7 @@ namespace ITSM.Services
             _dbContext = dbContext;
         }
 
-        public bool AddCommentToProject(int id, string message, ClaimsPrincipal claims)
+        public bool AddComment(int id, string message, ClaimsPrincipal claims)
         {
             var userId = claims.FindFirst(ClaimTypes.NameIdentifier);
 
@@ -47,11 +46,6 @@ namespace ITSM.Services
             }
 
             return true;
-        }
-
-        public bool AddCommentToWorkItem(int projectId, string message, ClaimsPrincipal claims)
-        {
-            throw new NotImplementedException();
         }
 
         public bool DeleteComment(int commentId, ClaimsPrincipal claims)

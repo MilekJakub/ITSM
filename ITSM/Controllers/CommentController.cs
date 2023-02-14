@@ -15,9 +15,9 @@ namespace ITSM.Controllers
         }
 
         [HttpPost]
-        public IActionResult AddCommentToProject(int projectId, string message)
+        public IActionResult AddComment(int projectId, string message)
         {
-            var result = _commentService.AddCommentToProject(projectId, message, User);
+            var result = _commentService.AddComment(projectId, message, User);
 
             if(result) TempData["success"] = "Comment has been added.";
             else TempData["error"] = "Something went wrong while creating your comment.";
@@ -34,17 +34,6 @@ namespace ITSM.Controllers
             else TempData["error"] = "Something went wrong while creating your comment.";
 
             return RedirectToAction("Details", "Project", new { id = projectId });
-        }
-
-        [HttpPost]
-        public IActionResult AddCommentToWorkItem(int workItemId, string message)
-        {
-            var result = _commentService.AddCommentToWorkItem(workItemId, message, User);
-
-            if(result) TempData["success"] = "Comment has been added.";
-            else TempData["error"] = "Something went wrong while creating your comment.";
-
-            throw new Exception();
         }
     }
 }

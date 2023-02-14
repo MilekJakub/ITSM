@@ -162,13 +162,21 @@ namespace ITSM.Areas.Identity.Pages.Account
                 if (result.Succeeded)
                 {
                     await _userManager.AddToRoleAsync(user, "Employee");
-                    await _signInManager.SignInAsync(user, isPersistent: false);
                     return LocalRedirect(returnUrl);
                 }
+
+                var errors = new List<string>();
 
                 foreach (var error in result.Errors)
                 {
                     ModelState.AddModelError(string.Empty, error.Description);
+                    errors.Add(error.Description);
+                }
+
+                if (result.Errors.Any())
+                {
+                    TempData["error"] = $"{String.Join(" ", errors)}";
+                    return Redirect(Request.Path);
                 }
             }
 
