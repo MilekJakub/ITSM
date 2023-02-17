@@ -16,6 +16,7 @@ namespace ITSM.Services
         bool Create(WorkItemDetailsViewModel workItemVM);
         bool Update(WorkItemDetailsViewModel workItemVM);
         bool Delete(int id);
+        bool ChangeWorkItemState(int workItemId, int stateId);
     }
 
     public class WorkItemService : IWorkItemService
@@ -72,7 +73,7 @@ namespace ITSM.Services
                 workItemVM.Title = workItem.Title;
                 workItemVM.Description = workItem.Description;
                 workItemVM.Priority = workItem.Priority;
-                   
+
                 workItemVM.StateId = workItem.StateId;
                 workItemVM.ProjectId = workItem.ProjectId;
                 workItemVM.UserId = workItem.UserId;
@@ -159,7 +160,7 @@ namespace ITSM.Services
                             StartDate = workItemVM.StartDate!.Value,
                             EndDate = workItemVM.EndDate!.Value
                         };
-                        
+
                         _dbContext.Epics.Add(epic);
                         break;
 
@@ -263,6 +264,32 @@ namespace ITSM.Services
             }
 
             return statesAsSelectItems;
+        }
+
+        public bool ChangeWorkItemState(int workItemId, int stateId)
+        {
+            var workItem = _dbContext.WorkItems.FirstOrDefault(x => x.Id == workItemId);
+
+            if (workItem == null)
+                return false;
+
+            if (stateId == 0)
+            {
+                workItem.StateId = null;
+                _dbContext.SaveChanges();
+
+                return true;
+            }
+            
+            var state = _dbContext.States.FirstOrDefault(x => x.Id == stateId);
+
+            if(state == null)
+                return false;
+
+            workItem.StateId = stateId;
+            _dbContext.SaveChanges();
+
+            return true;
         }
 
         private IEnumerable<SelectListItem> GetProjectsAsSelectItems()

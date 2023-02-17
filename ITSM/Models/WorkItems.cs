@@ -1,6 +1,7 @@
 ﻿#pragma warning disable CS8618
 
 using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
+using Newtonsoft.Json;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 
@@ -29,12 +30,15 @@ namespace ITSM.Models
         public string Discriminator { get; set; }
 
         public int? StateId { get; set; }
+        [JsonIgnore]
         public State? State { get; set; }
 
         public int? ProjectId { get; set; }
+        [JsonIgnore]
         public Project? Project { get; set; }
 
         public string? UserId { get; set; }
+        [JsonIgnore]
         public User? User { get; set; }
 
         [ValidateNever]

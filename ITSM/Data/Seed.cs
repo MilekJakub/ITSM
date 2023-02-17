@@ -78,11 +78,6 @@ namespace ITSM.Data
                     },
                     new State()
                     {
-                        Name = "Open",
-                        Description = "The issue is open and ready for the assignee to start work on it."
-                    },
-                    new State()
-                    {
                         Name = "In Progress",
                         Description = "This issue is being actively worked on at the moment by the assignee."
                     },
