@@ -91,7 +91,6 @@
                         <th scope="col">State</th>
                         <th scope="col">User</th>
                         <th scope="col">Type</th>
-                        <th scope="col"></th>
                     </tr>
                 </thead>
                 <tbody>
@@ -104,27 +103,6 @@
                             <td>@(item.State?.Name ?? "Unassigned")</td>
                             <td>@(item.User == null ? "Unassigned" : $"{item.User.Forename} {item.User.Surname}")</td>
                             <td>@item.Discriminator</td>
-                            <td>
-                                <a id="contextMenu" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                    <i class="bi bi-three-dots"></i>
-                                </a>
-                                <ul class="dropdown-menu" aria-labelledby="contextMenu">
-                                    <li>
-                                        <a href="#" class="dropdown-item d-flex justify-content-md-between" data-bs-toggle="modal">Mark &raquo;</a>
-                                        <ul class="dropdown-menu dropdown-submenu">
-                                            <li>
-                                                <a class="dropdown-item" href="#">Completed</a>
-                                            </li>
-                                            <li>
-                                                <a class="dropdown-item" href="#">To do</a>
-                                            </li>
-                                            <li>
-                                                <a class="dropdown-item" href="#">Currently working</a>
-                                            </li>
-                                        </ul>
-                                    </li>
-                                </ul>
-                            </td>
                         </tr>
                     }
                 </tbody>
@@ -148,7 +126,6 @@
                         <th scope="col">State</th>
                         <th scope="col">User</th>
                         <th scope="col">Type</th>
-                        <th scope="col"></th>
                     </tr>
                 </thead>
                 <tbody>
@@ -161,16 +138,6 @@
                             <td>@(item.State?.Name ?? "Unassigned")</td>
                             <td>@(item.User == null ? "Unassigned" : $"{item.User.Forename} {item.User.Surname}")</td>
                             <td>@item.Discriminator</td>
-                            <td>
-                                <a id="contextMenu" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                    <i class="bi bi-three-dots"></i>
-                                </a>
-                                <ul class="dropdown-menu" aria-labelledby="contextMenu">
-                                    <li>
-                                        <a href="#" class="dropdown-item d-flex justify-content-md-between" data-bs-toggle="modal">Assign to this</a>
-                                    </li>
-                                </ul>
-                            </td>
                         </tr>
                     }
                 </tbody>
@@ -178,69 +145,6 @@
         }
     </div>
 </div>
-
-
-@if (Model.Project.Id != 0)
-{
-    <div class="row d-flex justify-content-center text-black mt-5">
-        <div class="col-md-12 col-xl-6 p-0">
-            <h3>Discussion</h3>
-            <hr />
-        </div>
-    </div>
-
-
-    @if (Model.Project.Id != 0 && user != null)
-    {
-        <form method="post" class="row d-flex justify-content-center p-0" asp-controller="Comment" asp-action="AddCommentToProject" asp-route-projectId="@Model.Project.Id">
-            <div class="col-md-12 col-xl-6 p-0">
-                <div class="mb-3 p-3 border rounded">
-                    <label class="fs-5 mb-3" for="commentTextArea">@user.Forename @user.Surname</label>
-                    <textarea id="commentContent" name="message" class="form-control" placeholder="Leave a comment here" style="resize: none; min-height: 64px; max-height: 320px;"></textarea>
-                    <button type="submit" class="btn btn-dark rounded-0 mt-3">Submit</button>
-                </div>
-            </div>
-        </form>
-    }
-
-    <section class="mt-5">
-        @if (Model.Project.Comments != null && Model.Project.Comments.Any())
-        {
-            @foreach (var comment in Model.Project.Comments)
-            {
-                <div class="row my-4 d-flex justify-content-center">
-                    <div class="col-md-12 col-xl-6 p-3 border rounded">
-                        <div class="row">
-                            <div class="col-10">
-                                <span class="fw-bold">@comment.User.Forename @comment.User.Surname</span>
-                                <span class="text-muted mb-3">@comment.CreationDate</span>
-                            </div>
-                            @if (comment.UserId == user?.Id)
-                            {
-                                <div class="col-2 d-flex justify-content-end">
-                                    <a id="contextMenu" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                        <i class="bi bi-three-dots"></i>
-                                    </a>
-                                    <ul class="dropdown-menu" aria-labelledby="contextMenu">
-                                        <li>
-                                            <!-- MODAL TRIGGER -->
-                                            <a href="#" class="dropdown-item d-flex justify-content-md-between" data-bs-toggle="modal" data-bs-target="#deleteModal@(comment.Id)">Delete</a>
-                                        </li>
-                                    </ul>
-                                </div>
-                            }
-                        </div>
-                        <div class="row">
-                            <div class="col-12">
-                                <textarea readonly class="form-control-plaintext comment" style="resize: none;">@comment.Message</textarea>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            }
-        }
-    </section>
-}
 
 @section Scripts {
     <script type="text/javascript">

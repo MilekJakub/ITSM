@@ -6,16 +6,16 @@ using ITSM.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
 builder.Services.AddMvc();
 builder.Services.AddControllersWithViews();
 
-builder.Services.AddDbContext<BoardsContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("Main")));
+builder.Services.AddDbContext<BoardsContext>(options => options.UseSqlite(builder.Configuration.GetConnectionString("SQLite")));
 
 builder.Services.AddIdentity<IdentityUser, IdentityRole>(options => options.User.RequireUniqueEmail = true)
     .AddDefaultTokenProviders()
     .AddDefaultUI()
     .AddEntityFrameworkStores<BoardsContext>();
+
 
 builder.Services.ConfigureApplicationCookie(options =>
 {
@@ -54,6 +54,6 @@ app.MapControllerRoute(
 
 app.MapRazorPages();
 
-Seeder.Seed(app);
+await Seeder.Seed(app);
 
 app.Run();

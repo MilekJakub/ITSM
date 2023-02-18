@@ -1,5 +1,4 @@
-﻿using ITSM.Migrations;
-using ITSM.Models;
+﻿using ITSM.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using System.Runtime.InteropServices;
@@ -23,7 +22,6 @@ namespace ITSM.Data
 
             if (!roleManager.Roles.Any())
             {
-                await roleManager.CreateAsync(new IdentityRole("Standard"));
                 await roleManager.CreateAsync(new IdentityRole("Employee"));
                 await roleManager.CreateAsync(new IdentityRole("Admin"));
                 await dbContext.SaveChangesAsync();
@@ -54,17 +52,6 @@ namespace ITSM.Data
                 
                 await userManager.CreateAsync(employee, "SuperSecret@1"); 
                 await userManager.AddToRoleAsync(employee, "Employee");
-
-                User standard = new()
-                {
-                    Forename = "Standard",
-                    Surname = "User",
-                    Email = "standard@itsm.com",
-                    UserName = "standard@itsm.com"
-                };
-                
-                await userManager.CreateAsync(standard, "SuperSecret@1"); 
-                await userManager.AddToRoleAsync(standard, "Standard");
             }
 
             if (!dbContext.States.Any())

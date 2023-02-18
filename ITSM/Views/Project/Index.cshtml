@@ -1,5 +1,7 @@
 ﻿@model IEnumerable<Project>
 
+@using Microsoft.AspNetCore.Identity;
+
 <nav id="toolbar" class="navbar navbar-expand-lg navbar-light border-bottom border-dark">
     <div class="container-fluid">
         <button class="navbar-toggler ms-auto" type="button" data-bs-toggle="collapse" data-bs-target="#toolbar" aria-controls="toolbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -60,19 +62,14 @@ else
                             <a id="contextMenu" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                                 <i class="bi bi-three-dots"></i>
                             </a>
-                            <ul class="dropdown-menu" aria-labelledby="contextMenu">
 
-                                <li>
-                                    <label class="dropdown-item d-flex justify-content-md-between" href="#">Work Items</label>
-                                </li>
-                                <li>
-                                    <label class="dropdown-item d-flex justify-content-md-between" href="#">States</label>
-                                </li>
+                            <ul class="dropdown-menu" aria-labelledby="contextMenu">
                                 <li>
                                     <!-- MODAL TRIGGER -->
                                     <a href="#" class="dropdown-item d-flex justify-content-md-between" data-bs-toggle="modal" data-bs-target="#deleteModal@(item.Id)">Delete</a>
                                 </li>
                             </ul>
+
                             <!-- MODAL START -->
                             <div class="modal fade" id="deleteModal@(item.Id)" tabindex="-1" aria-labelledby="deleteModal@(item.Id)Label" aria-hidden="true">
                                 <div class="modal-dialog">
