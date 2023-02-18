@@ -1,5 +1,4 @@
-﻿using ITSM.Migrations;
-using ITSM.Models;
+﻿using ITSM.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using System.Runtime.InteropServices;
